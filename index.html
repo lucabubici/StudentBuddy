@@ -47,7 +47,7 @@
       form.append('file', file);
 
       try {
-        const res = await fetch('https://studentbuddy-production-f597.up.railway.app', {
+        const res = await fetch('https://studentbuddy-production-f597.up.railway.app/convert', {
           method: 'POST',
           body: form
         });
