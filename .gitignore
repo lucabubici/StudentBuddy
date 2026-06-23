@@ -1,0 +1,9 @@
+cat > .gitignore << 'EOF'
+venv/
+__pycache__/
+*.pyc
+.env
+*.pptx
+output.md
+test_gemini.py
+EOF
