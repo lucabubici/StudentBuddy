@@ -53,4 +53,24 @@
         });
 
         if (!res.ok) {
-          status.textContent = 'Something went
+          status.textContent = 'Something went wrong. Try again.';
+          return;
+        }
+
+        const text = await res.text();
+        const blob = new Blob([text], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name.replace('.pptx', '.md');
+        a.click();
+
+        status.textContent = 'Done! Check your downloads.';
+      } catch (err) {
+        status.textContent = 'Error: ' + err.message;
+      }
+    });
+  </script>
+
+</body>
+</html>
