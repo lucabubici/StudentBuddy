@@ -43,7 +43,7 @@
       const form = new FormData();
       form.append('file', file);
 
-      const res = await fetch('http://localhost:8000/convert', { method: 'POST', body: form });
+      const res = await fetch('studentbuddy-production-f597.up.railway.app, { method: 'POST', body: form });
       if (!res.ok) { status.textContent = 'Something went wrong. Try again.'; return; }
 
       const text = await res.text();
