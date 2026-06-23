@@ -6,4 +6,4 @@ __pycache__/
 *.pptx
 output.md
 test_gemini.py
-EOF
+EOF.DS_Store
