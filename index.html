@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudentBuddy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-950 text-white min-h-screen flex flex-col items-center justify-center p-8">
+
+  <h1 class="text-4xl font-bold mb-2">StudentBuddy</h1>
+  <p class="text-gray-400 mb-8">Upload your lecture slides. Get a clean Markdown file.</p>
+
+  <div class="bg-gray-800 rounded-xl p-8 w-full max-w-md text-center">
+    <input type="file" id="fileInput" accept=".pptx" class="hidden">
+    <label for="fileInput" class="cursor-pointer block border-2 border-dashed border-gray-500 rounded-lg p-8 hover:border-blue-400 transition">
+      <p class="text-lg">Drop your PPTX here</p>
+      <p class="text-gray-400 text-sm mt-1">or click to browse</p>
+    </label>
+    <p id="fileName" class="text-gray-400 text-sm mt-3"></p>
+    <button id="convertBtn" onclick="convert()" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+      Convert
+    </button>
+    <p id="status" class="text-sm mt-3 text-gray-400"></p>
+  </div>
+
+  <p class="text-gray-600 text-xs mt-8">Your file is processed and immediately deleted. Nothing is stored.</p>
+
+  <script>
+    const input = document.getElementById('fileInput');
+    const status = document.getElementById('status');
+
+    input.addEventListener('change', () => {
+      document.getElementById('fileName').textContent = input.files[0]?.name || '';
+    });
+
+    async function convert() {
+      const file = input.files[0];
+      if (!file) { status.textContent = 'Please select a file first.'; return; }
+
+      status.textContent = 'Converting...';
+
+      const form = new FormData();
+      form.append('file', file);
+
+      const res = await fetch('http://localhost:8000/convert', { method: 'POST', body: form });
+      if (!res.ok) { status.textContent = 'Something went wrong. Try again.'; return; }
+
+      const text = await res.text();
+      const blob = new Blob([text], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file.name.replace('.pptx', '.md');
+      a.click();
+
+      status.textContent = 'Done! Check your downloads.';
+    }
+  </script>
+
+</body>
+</html>
