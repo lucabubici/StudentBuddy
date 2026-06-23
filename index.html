@@ -18,7 +18,7 @@
       <p class="text-gray-400 text-sm mt-1">or click to browse</p>
     </label>
     <p id="fileName" class="text-gray-400 text-sm mt-3"></p>
-    <button id="convertBtn" onclick="convert()" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+    <button id="convertBtn" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
       Convert
     </button>
     <p id="status" class="text-sm mt-3 text-gray-400"></p>
@@ -30,33 +30,27 @@
     const input = document.getElementById('fileInput');
     const status = document.getElementById('status');
 
-    input.addEventListener('change', () => {
-      document.getElementById('fileName').textContent = input.files[0]?.name || '';
+    input.addEventListener('change', function() {
+      document.getElementById('fileName').textContent = input.files[0] ? input.files[0].name : '';
     });
 
-    async function convert() {
+    document.getElementById('convertBtn').addEventListener('click', async function() {
       const file = input.files[0];
-      if (!file) { status.textContent = 'Please select a file first.'; return; }
+      if (!file) {
+        status.textContent = 'Please select a file first.';
+        return;
+      }
 
       status.textContent = 'Converting...';
 
       const form = new FormData();
       form.append('file', file);
 
-      const res = await fetch('studentbuddy-production-f597.up.railway.app, { method: 'POST', body: form });
-      if (!res.ok) { status.textContent = 'Something went wrong. Try again.'; return; }
+      try {
+        const res = await fetch('https://YOUR-RAILWAY-URL.up.railway.app/convert', {
+          method: 'POST',
+          body: form
+        });
 
-      const text = await res.text();
-      const blob = new Blob([text], { type: 'text/markdown' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = file.name.replace('.pptx', '.md');
-      a.click();
-
-      status.textContent = 'Done! Check your downloads.';
-    }
-  </script>
-
-</body>
-</html>
+        if (!res.ok) {
+          status.textContent = 'Something went
